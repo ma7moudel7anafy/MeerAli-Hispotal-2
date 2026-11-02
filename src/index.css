@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Cairo', 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+}
+
+.tabular-numbers {
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================================
+   Universal Print Styles for Prescriptions, Receipts & Thermal Slips
+   ========================================================================= */
+@media print {
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 12pt;
+  }
+
+  /* Hide interactive UI elements */
+  nav,
+  aside,
+  header,
+  button,
+  .no-print,
+  [role="button"] {
+    display: none !important;
+  }
+
+  /* Strip dark modal backdrops during printing */
+  .fixed.inset-0,
+  [class*="backdrop-blur"] {
+    position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Force background colors and borders in browsers */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

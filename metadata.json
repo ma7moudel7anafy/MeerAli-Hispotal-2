@@ -1,0 +1,6 @@
+{
+  "name": "نظام مستشفى لجنة الزكاة بميت علي",
+  "description": "نظام إدارة طبي خيري متكامل يشمل بوابة المرضى والزوار لاستعراض التخصصات ومواعيد وحضور الأطباء، ولوحة إدارة لملفات المرضى والزيارات والعيادات.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
