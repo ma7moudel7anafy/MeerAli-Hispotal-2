@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { Patient } from '../../types';
+import { Patient, DiagnosticService } from '../../types';
 import { DailyAttendanceManager } from './DailyAttendanceManager';
 import { PatientManager } from './PatientManager';
 import { VisitsManager } from './VisitsManager';
@@ -106,6 +106,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
   // Diagnostic booking modal state for reception
   const [isDiagBookingOpen, setIsDiagBookingOpen] = useState(false);
   const [diagBookingDept, setDiagBookingDept] = useState<'lab' | 'radiology'>('lab');
+  const [selectedDiagService, setSelectedDiagService] = useState<DiagnosticService | null>(null);
 
   const handleOpenVisitModal = (patient: Patient) => {
     setRegisterVisitPatient(patient);
@@ -721,6 +722,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 <button
                   onClick={() => {
                     setDiagBookingDept('lab');
+                    setSelectedDiagService(null);
                     setIsDiagBookingOpen(true);
                   }}
                   className="px-3.5 py-2 bg-white text-teal-900 rounded-xl font-bold text-xs hover:bg-teal-50 flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
@@ -731,6 +733,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
                 <button
                   onClick={() => {
                     setDiagBookingDept('radiology');
+                    setSelectedDiagService(null);
                     setIsDiagBookingOpen(true);
                   }}
                   className="px-3.5 py-2 bg-cyan-700 text-white border border-cyan-400/40 rounded-xl font-bold text-xs hover:bg-cyan-600 flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
@@ -742,8 +745,10 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
             </div>
 
             <DiagnosticsList
+              services={getAllDiagnosticServices()}
               onBookService={(service) => {
                 setDiagBookingDept(service.type === 'radiology' || service.service_type === 'radiology' ? 'radiology' : 'lab');
+                setSelectedDiagService(service);
                 setIsDiagBookingOpen(true);
               }}
             />
@@ -789,8 +794,12 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
       {/* Diagnostic Direct Booking Modal for Reception */}
       <DiagnosticBookingModal
         isOpen={isDiagBookingOpen}
-        onClose={() => setIsDiagBookingOpen(false)}
-        defaultDepartment={diagBookingDept}
+        onClose={() => {
+          setIsDiagBookingOpen(false);
+          setSelectedDiagService(null);
+        }}
+        initialDepartment={diagBookingDept}
+        initialService={selectedDiagService}
       />
     </div>
   );

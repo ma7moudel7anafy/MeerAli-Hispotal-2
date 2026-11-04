@@ -22,6 +22,7 @@ interface DiagnosticBookingModalProps {
   onClose: () => void;
   initialDepartment?: 'lab' | 'radiology';
   initialPatient?: Patient | null;
+  initialService?: DiagnosticService | null;
   onOrderCreated?: (order: DiagnosticOrder) => void;
 }
 
@@ -30,6 +31,7 @@ export const DiagnosticBookingModal: React.FC<DiagnosticBookingModalProps> = ({
   onClose,
   initialDepartment = 'lab',
   initialPatient = null,
+  initialService = null,
   onOrderCreated,
 }) => {
   const [department, setDepartment] = useState<'lab' | 'radiology'>(initialDepartment);
@@ -53,7 +55,10 @@ export const DiagnosticBookingModal: React.FC<DiagnosticBookingModalProps> = ({
   // Sync state when opening
   useEffect(() => {
     if (isOpen) {
-      setDepartment(initialDepartment);
+      const targetDept = initialService
+        ? (initialService.type === 'radiology' || initialService.service_type === 'radiology' ? 'radiology' : 'lab')
+        : initialDepartment;
+      setDepartment(targetDept);
       setSelectedPatient(initialPatient);
       if (initialPatient) {
         setPatientName(initialPatient.full_name);
@@ -70,14 +75,20 @@ export const DiagnosticBookingModal: React.FC<DiagnosticBookingModalProps> = ({
         setPatientNumber('');
       }
 
-      setSelectedServiceIds([]);
+      if (initialService) {
+        setSelectedServiceIds([initialService.id]);
+        setFeeAmount(typeof initialService.price === 'number' ? initialService.price : targetDept === 'lab' ? 50 : 70);
+      } else {
+        setSelectedServiceIds([]);
+        setFeeAmount(targetDept === 'lab' ? 50 : 70);
+      }
       setCustomTests('');
       setSuccessOrder(null);
 
       // Load patients
       dbService.getPatients().then(pats => setPatients(pats));
     }
-  }, [isOpen, initialDepartment, initialPatient]);
+  }, [isOpen, initialDepartment, initialPatient, initialService]);
 
   // Toggle service selection
   const handleToggleService = (service: DiagnosticService) => {
