@@ -6,3 +6,11 @@ coverage/
 *.log
 .env*
 !.env.example
+data/backups/
+data/corrupted/
+data/*.lock
+data/http_test_sandbox/
+data/test_sandbox/
+data/test_backup_sandbox/
+*.tmp
+*.bak
